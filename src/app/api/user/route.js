@@ -1,13 +1,14 @@
 // src/app/api/user/route.js
 
 import { getLoggedInUser } from "@/lib/server/appwrite";
+import { NextResponse } from "next/server";
 
-export async function GET(request) {
+export async function GET() {
   // console.log(request);
   try {
     const user = await getLoggedInUser();
-    return Response.json({ user });
+    return NextResponse.json(user);
   } catch {
-    return Response.json({ error: "Unauthorized" }, { status: 401 });
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 }

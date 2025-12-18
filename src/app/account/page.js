@@ -1,30 +1,43 @@
+"use client";
 // src/app/account/page.jsx
+import { signOut } from "@/lib/server/appwrite";
+import { useEffect, useState } from "react";
 
-import { createSessionClient } from "@/lib/server/appwrite";
-import { redirect } from "next/navigation";
-import { cookies } from "next/headers";
+export default function HomePage() {
+  const [user, setUsers] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-async function signOut() {
-  "use server";
+  useEffect(() => {
+    // Define an asynchronous function to fetch the data
+    const fetchData = async () => {
+      try {
+        const response = await fetch("http://localhost:3000/api/user");
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const jsonData = await response.json();
+        console.log(jsonData);
+        setUsers(jsonData);
+        setError(null);
+      } catch (err) {
+        setError(err.message);
+        setUsers([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-  const { account } = await createSessionClient();
+    // Call the function inside useEffect
+    fetchData();
+  }, []); // The empty dependency array [] makes this run only on mount
 
-  const cookieStore = await cookies();
-  cookieStore.delete("appwrite-session");
+  if (isLoading) {
+    return <div>Loading users...</div>;
+  }
 
-  await account.deleteSession("current");
-
-  redirect("/signup");
-}
-
-export default async function HomePage() {
-  let user;
-
-  try {
-    const { account } = await createSessionClient();
-    user = await account.get();
-  } catch (error) {
-    console.error(error);
+  if (error) {
+    return <div>Error: {error}</div>;
   }
 
   return (

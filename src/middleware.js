@@ -29,7 +29,7 @@ export async function middleware(request) {
     return NextResponse.redirect(new URL("/account", request.nextUrl));
   }
 
-  console.log(request.cookies.get("appwrite-session"));
+  // console.log(request.cookies.get("appwrite-session"));
   return NextResponse.next();
 }
 

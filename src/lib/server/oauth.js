@@ -1,7 +1,6 @@
 // src/lib/server/oauth.js
 "use server";
 
-import { createAdminClient } from "@/lib/server/appwrite";
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 import { Account, Client, OAuthProvider } from "node-appwrite";
