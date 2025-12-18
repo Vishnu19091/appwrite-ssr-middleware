@@ -12,7 +12,9 @@ export default function HomePage() {
     // Define an asynchronous function to fetch the data
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:3000/api/user");
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/user`
+        );
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
