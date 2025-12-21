@@ -39,7 +39,7 @@ export async function createAdminClient() {
 }
 
 // we use request to get the cookies from the request
-export async function getLoggedInUser(req) {
+export async function getLoggedInUser() {
   const client = new Client()
     .setEndpoint(process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT)
     .setProject(process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID);
@@ -47,23 +47,25 @@ export async function getLoggedInUser(req) {
   // Get the session cookie from the request
   const sessionCookie = (await cookies()).get("appwrite-session"); // The name might vary
 
-  if (!sessionCookie) {
+  if (!sessionCookie || !sessionCookie.value) {
     return null;
   }
 
   // Manually set the session cookie on the client for server-side requests
-  client.setSession(sessionCookie.value);
+  if (sessionCookie.value) client.setSession(sessionCookie.value);
 
   const account = new Account(client);
 
   try {
     // Attempt to get the user details with the active session
     const user = await account.get();
+
+    // console.log(user.prefs);
     return user;
   } catch (error) {
     // No active session or user not logged in
     console.error("Failed to get user:", error);
-    return null;
+    return error;
   }
 }
 

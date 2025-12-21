@@ -15,7 +15,7 @@ export async function signUpWithGithub() {
   const incomingHeaders = await headers();
 
   const origin = incomingHeaders.get("origin");
-  console.log(origin);
+  // console.log("ORIGIN ->", origin);
 
   const redirectUrl = await account.createOAuth2Token({
     provider: OAuthProvider.Google,
@@ -23,5 +23,6 @@ export async function signUpWithGithub() {
     failure: `${origin}/signup`,
   });
 
+  // console.log("REDIRECT URL -> ", redirectUrl);
   return redirect(redirectUrl);
 }

@@ -18,6 +18,7 @@ export async function middleware(request) {
 
   // Tries to fetch user data from the appwrite
   const user = await getLoggedInUser(request);
+  // console.log(user);
 
   // Redirect to login if accessing a protected route without a user
   if (isProtectedRoute && !user?.$id) {
