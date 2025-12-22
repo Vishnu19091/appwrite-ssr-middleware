@@ -56,12 +56,26 @@ export async function getLoggedInUser() {
 
   const account = new Account(client);
 
+  const identities = await account.listIdentities();
+
+  const googleIdentity = identities.identities.find(
+    (i) => i.provider === "google"
+  );
+
+  let avatar = null;
+
+  if (googleIdentity?.providerAccessToken) {
+    try {
+      avatar = await getGoogleProfilePhoto(googleIdentity.providerAccessToken);
+    } catch (err) {
+      console.error("Google avatar fetch failed:", err);
+    }
+  }
+
   try {
     // Attempt to get the user details with the active session
     const user = await account.get();
-
-    // console.log(user.prefs);
-    return user;
+    return { ...user, avatar };
   } catch (error) {
     // No active session or user not logged in
     console.error("Failed to get user:", error);
@@ -78,4 +92,23 @@ export async function signOut() {
   await account.deleteSession("current");
 
   redirect("/signup");
+}
+
+async function getGoogleProfilePhoto(providerAccessToken) {
+  const res = await fetch(
+    "https://people.googleapis.com/v1/people/me?personFields=photos",
+    {
+      headers: {
+        Authorization: `Bearer ${providerAccessToken}`,
+      },
+    }
+  );
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch Google profile");
+  }
+
+  const data = await res.json();
+
+  return data.photos?.[0]?.url || null;
 }

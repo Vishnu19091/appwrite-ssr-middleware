@@ -19,7 +19,7 @@ export default function HomePage() {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const jsonData = await response.json();
-        console.log(jsonData);
+        // console.log(jsonData);
         setUsers(jsonData);
         setError(null);
       } catch (err) {
@@ -54,6 +54,18 @@ export default function HomePage() {
         <li>
           <strong>ID:</strong> {user.$id}
         </li>
+
+        {user.avatar && (
+          <li>
+            Profile Picture{" "}
+            <img
+              src={user.avatar}
+              height={50}
+              width={50}
+              style={{ borderRadius: "100%" }}
+            />
+          </li>
+        )}
       </ul>
 
       <form action={signOut}>
