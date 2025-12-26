@@ -17,7 +17,7 @@ export async function middleware(request) {
   const isPublicRoute = publicRoutes.includes(path);
 
   // Tries to fetch user data from the appwrite
-  const user = await getLoggedInUser(request);
+  const user = await getLoggedInUser();
   // console.log(user);
 
   // Redirect to login if accessing a protected route without a user

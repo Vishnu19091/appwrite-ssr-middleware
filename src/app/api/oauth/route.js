@@ -2,15 +2,9 @@
 
 import { createAdminClient } from "@/lib/server/appwrite";
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 import { NextResponse } from "next/server";
-import { Account, Client } from "node-appwrite";
 
 export async function GET(request) {
-  const client = new Client()
-    .setEndpoint(process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT)
-    .setProject(process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID);
-
   const { account } = await createAdminClient();
 
   try {
